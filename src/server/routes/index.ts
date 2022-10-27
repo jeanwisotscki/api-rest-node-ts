@@ -8,6 +8,12 @@ router.get("/", (_, res) => {
   return res.send("Fala, get!");
 });
 
+router.get(
+  "/cidades",
+  CidadesController.getAllValidation,
+  CidadesController.getAll
+);
+
 router.post(
   "/cidades",
   CidadesController.createValidation,
@@ -15,15 +21,15 @@ router.post(
 );
 
 router.get(
-  "/cidades",
-  CidadesController.getAllValidation,
-  CidadesController.getAll
-);
-
-router.get(
   "/cidades/:id",
   CidadesController.getByIdValidation,
   CidadesController.getById
+);
+
+router.put(
+  "/cidades/:id",
+  CidadesController.updateByIdValidation,
+  CidadesController.updateById
 );
 
 export { router };
