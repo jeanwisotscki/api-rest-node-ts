@@ -23,6 +23,6 @@ export const deleteById = async (
   console.log(req.params);
 
   return res
-    .status(StatusCodes.INTERNAL_SERVER_ERROR)
+    .status(StatusCodes.OK)
     .send("Método: deleteById - Não implementado");
 };
