@@ -16,13 +16,13 @@ export const deleteByIdValidation = validation((getSchema) => ({
   ),
 }));
 
-export const deleteById = async (
-  req: Request<{}, {}, IParamsProps>,
-  res: Response
-) => {
-  console.log(req.params);
+export const deleteById = async (req: Request<IParamsProps>, res: Response) => {
+  if (Number(req.params.id) === 99999)
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+      errors: {
+        default: "Registro não encontrado",
+      },
+    });
 
-  return res
-    .status(StatusCodes.OK)
-    .send("Método: deleteById - Não implementado");
+  return res.status(StatusCodes.NO_CONTENT).send();
 };

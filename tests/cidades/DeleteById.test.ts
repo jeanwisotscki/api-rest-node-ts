@@ -4,16 +4,21 @@ import { StatusCodes } from "http-status-codes";
 describe("cidades - DeleteById", () => {
   //
   it("Deleta um registro", async () => {
-    const res1 = await testServer.delete("/cidades/1");
+    const res1 = await testServer.post("/cidades").send({
+      nome: "Cidade de teste",
+    });
+    expect(res1.statusCode).toEqual(StatusCodes.CREATED);
 
-    expect(res1.statusCode).toEqual(StatusCodes.OK);
+    const resDeleted = await testServer.delete(`/cidades/${res1.body}`).send();
+    expect(resDeleted.statusCode).toEqual(StatusCodes.NO_CONTENT);
   });
 
   //
-  it("Validação de registro: verifica se o id não existe", async () => {
-    const res1 = await testServer.delete("/cidades/");
+  it("Tenta deletar um registro que não existe", async () => {
+    const res1 = await testServer.delete("/cidades/99999").send();
 
-    expect(res1.statusCode).toEqual(StatusCodes.NOT_FOUND);
+    expect(res1.statusCode).toEqual(StatusCodes.INTERNAL_SERVER_ERROR);
+    expect(res1.body).toHaveProperty("errors.default");
   });
 
   //
