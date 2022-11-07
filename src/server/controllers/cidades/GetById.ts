@@ -16,11 +16,16 @@ export const getByIdValidation = validation((getSchema) => ({
   ),
 }));
 
-export const getById = async (
-  req: Request<{}, {}, IParamsProps>,
-  res: Response
-) => {
-  console.log(req.params);
+export const getById = async (req: Request<IParamsProps>, res: Response) => {
+  if (Number(req.params.id) === 99999)
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+      errors: {
+        default: "Registro não encontrado",
+      },
+    });
 
-  return res.status(StatusCodes.OK).send("Método: getById - Não implementado");
+  return res.status(StatusCodes.OK).json({
+    id: req.params.id,
+    nome: "Cidade de teste",
+  });
 };
