@@ -3,13 +3,27 @@ import { StatusCodes } from "http-status-codes";
 
 describe("cidades - UpdateById", () => {
   //
-  it("Edita um registro", async () => {
-    const res1 = await testServer.put("/cidades/1").send({
+  it("Atualiza um registro por id", async () => {
+    const res1 = await testServer.post("/cidades").send({
       nome: "Cidade de teste",
     });
+    expect(res1.statusCode).toEqual(StatusCodes.CREATED);
 
-    expect(res1.statusCode).toEqual(StatusCodes.OK);
-    expect(typeof res1.body).toEqual("number");
+    const resUpdateById = await testServer.put(`/cidades/${res1.body}`).send({
+      nome: "Cidade teste",
+    });
+
+    expect(resUpdateById.statusCode).toEqual(StatusCodes.NO_CONTENT);
+  });
+
+  //
+  it("Tenta atualizar um registro que não existe", async () => {
+    const res1 = await testServer
+      .put("/cidades/99999")
+      .send({ nome: "Cidade" });
+
+    expect(res1.statusCode).toEqual(StatusCodes.INTERNAL_SERVER_ERROR);
+    expect(res1.body).toHaveProperty("errors.default");
   });
 
   //
