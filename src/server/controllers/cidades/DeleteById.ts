@@ -5,7 +5,7 @@ import * as yup from "yup";
 import { validation } from "../../shared/middleware";
 
 interface IParamsProps {
-  id: number;
+  id?: number;
 }
 
 export const deleteByIdValidation = validation((getSchema) => ({
