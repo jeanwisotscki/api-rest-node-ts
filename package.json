@@ -5,10 +5,13 @@
   "main": "index.js",
   "scripts": {
     "server": "ts-node-dev --respawn --transpile-only ./src/index.ts",
-    "test": "jest",
-    "knex": "knex --knexfile ./src/server/database/knex/Environment.ts migrate:make teste",
     "production": "node ./build/index.js",
-    "postinstall": "tsc"
+    "postinstall": "tsc",
+    "test": "jest",
+    "knex:migrate": "knex --knexfile ./src/server/database/knex/Environment.ts migrate:latest",
+    "knex:rollback": "knex --knexfile ./src/server/database/knex/Environment.ts migrate:rollback",
+    "knex:rollback-all": "knex --knexfile ./src/server/database/knex/Environment.ts migrate:rollback --all",
+    "knex:seed": "knex --knexfile ./src/server/database/knex/Environment.ts seed:run"
   },
   "author": "Jean Wisotscki",
   "license": "ISC",
