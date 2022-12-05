@@ -2,20 +2,32 @@ import { Knex } from "../../knex";
 import { ICidade } from "../../models";
 import { ETableNames } from "../../ETableNames";
 
-export const create = async (
-  cidade: Omit<ICidade, "id">
-): Promise<Number | Error> => {
+export const getAll = async (
+  page: number,
+  limit: number,
+  filter: string,
+  id = 0
+): Promise<ICidade[] | Error> => {
   try {
-    const [result] = await Knex(ETableNames.cidade)
-      .insert(cidade)
-      .returning("id");
+    const result = await Knex(ETableNames.cidade)
+      .select("*")
+      .where("id", "=", id)
+      .orWhere("name", "like", `%${filter}%`)
+      .offset((page - 1) * limit)
+      .limit(limit);
 
-    if (typeof result === "object") return result.id;
-    else if (typeof result === "number") return result;
+    if (id > 0 && result.every((item) => item.id !== id)) {
+      const resultById = await Knex(ETableNames.cidade)
+        .select("*")
+        .where("id", "=", id)
+        .first();
 
-    return new Error("Erro ao cadastrar o registro.");
+      if (resultById) return [...result, resultById];
+    }
+
+    return result;
   } catch (error) {
     console.log(error);
-    return new Error("Erro ao cadastrar o registro.");
+    return new Error("Erro ao consultar os registros.");
   }
 };
