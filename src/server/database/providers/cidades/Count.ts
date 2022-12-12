@@ -4,7 +4,7 @@ import { ETableNames } from "../../ETableNames";
 export const count = async (filter = ""): Promise<number | Error> => {
   try {
     const [{ count }] = await Knex(ETableNames.cidade)
-      .where("name", "like", `%${filter}%`)
+      .where("nome", "like", `%${filter}%`)
       .count<[{ count: number }]>("* as count");
 
     if (Number.isInteger(Number(count))) return Number(count);
