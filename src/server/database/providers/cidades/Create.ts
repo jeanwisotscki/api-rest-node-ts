@@ -4,7 +4,7 @@ import { ETableNames } from "../../ETableNames";
 
 export const create = async (
   cidade: Omit<ICidade, "id">
-): Promise<Number | Error> => {
+): Promise<number | Error> => {
   try {
     const [result] = await Knex(ETableNames.cidade)
       .insert(cidade)
