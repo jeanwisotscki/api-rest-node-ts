@@ -5,6 +5,7 @@ import { StatusCodes } from "http-status-codes";
 import { IUsuario } from "../../database/models";
 import { validation } from "../../shared/middleware";
 import { UsuariosProvider } from "../../database/providers/usuarios";
+import { passwordCrypto } from "../../shared/services";
 
 interface IBodyProps extends Omit<IUsuario, "id" | "nome"> {}
 
@@ -22,7 +23,6 @@ export const signIn = async (
   res: Response
 ) => {
   const { email, senha } = req.body;
-
   const result = await UsuariosProvider.getByEmail(email);
 
   if (result instanceof Error) {
@@ -33,7 +33,12 @@ export const signIn = async (
     });
   }
 
-  if (senha !== result.senha) {
+  const passwordMatch = await passwordCrypto.verifyPassword(
+    senha,
+    result.senha
+  );
+
+  if (!passwordMatch) {
     return res.status(StatusCodes.UNAUTHORIZED).json({
       errors: {
         default: "Email ou senha são inválidos.",
